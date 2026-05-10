@@ -20,16 +20,16 @@
     </linearGradient>
   </defs>
 
-  <rect x="40" y="40" width="432" height="432" rx="108" fill="url(#bg)"/>
-  <rect x="40" y="40" width="432" height="432" rx="108" fill="url(#glow)"/>
-  <rect x="40.5" y="40.5" width="431" height="431" rx="107.5" stroke="rgba(255,255,255,0.08)"/>
+  <rect x="0" y="0" width="512" height="512" rx="128" fill="url(#bg)"/>
+  <rect x="0" y="0" width="512" height="512" rx="128" fill="url(#glow)"/>
+  <rect x="0.5" y="0.5" width="511" height="511" rx="127.5" stroke="rgba(255,255,255,0.08)"/>
 
-  <path d="M196 140H150C138.954 140 130 148.954 130 160V206" stroke="url(#stroke)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M316 140H362C373.046 140 382 148.954 382 160V206" stroke="url(#stroke)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M196 372H150C138.954 372 130 363.046 130 352V306" stroke="url(#stroke)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M316 372H362C373.046 372 382 363.046 382 352V306" stroke="url(#stroke)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M204 86H122C96.594 86 76 106.594 76 132V214" stroke="url(#stroke)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M308 86H390C415.406 86 436 106.594 436 132V214" stroke="url(#stroke)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M204 426H122C96.594 426 76 405.406 76 380V298" stroke="url(#stroke)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M308 426H390C415.406 426 436 405.406 436 380V298" stroke="url(#stroke)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <path d="M176 210C176 198.954 184.954 190 196 190H224L238 174H274L288 190H316C327.046 190 336 198.954 336 210V302C336 313.046 327.046 322 316 322H196C184.954 322 176 313.046 176 302V210Z" stroke="url(#accent)" stroke-width="16" stroke-linejoin="round"/>
-  <circle cx="256" cy="256" r="40" stroke="url(#accent)" stroke-width="16"/>
-  <circle cx="304" cy="220" r="8" fill="url(#accent)"/>
+  <path d="M136 182C136 161.013 153.013 144 174 144H214L236 120H290L312 144H338C358.987 144 376 161.013 376 182V330C376 350.987 358.987 368 338 368H174C153.013 368 136 350.987 136 330V182Z" stroke="url(#accent)" stroke-width="18" stroke-linejoin="round"/>
+  <circle cx="256" cy="256" r="70" stroke="url(#accent)" stroke-width="18"/>
+  <circle cx="332" cy="196" r="10" fill="url(#accent)"/>
 </svg>
