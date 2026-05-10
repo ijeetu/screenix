@@ -1,0 +1,35 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="72" y1="64" x2="430" y2="462" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#151515"/>
+      <stop offset="1" stop-color="#050505"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="100" y1="88" x2="250" y2="232" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="stroke" x1="152" y1="144" x2="356" y2="364" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F7F5"/>
+      <stop offset="0.45" stop-color="#D7F3E3"/>
+      <stop offset="1" stop-color="#8EE5B7"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="176" y1="186" x2="332" y2="336" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F7F5"/>
+      <stop offset="0.5" stop-color="#D7F3E3"/>
+      <stop offset="1" stop-color="#8EE5B7"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="40" y="40" width="432" height="432" rx="108" fill="url(#bg)"/>
+  <rect x="40" y="40" width="432" height="432" rx="108" fill="url(#glow)"/>
+  <rect x="40.5" y="40.5" width="431" height="431" rx="107.5" stroke="rgba(255,255,255,0.08)"/>
+
+  <path d="M196 140H150C138.954 140 130 148.954 130 160V206" stroke="url(#stroke)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M316 140H362C373.046 140 382 148.954 382 160V206" stroke="url(#stroke)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M196 372H150C138.954 372 130 363.046 130 352V306" stroke="url(#stroke)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M316 372H362C373.046 372 382 363.046 382 352V306" stroke="url(#stroke)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <path d="M176 210C176 198.954 184.954 190 196 190H224L238 174H274L288 190H316C327.046 190 336 198.954 336 210V302C336 313.046 327.046 322 316 322H196C184.954 322 176 313.046 176 302V210Z" stroke="url(#accent)" stroke-width="16" stroke-linejoin="round"/>
+  <circle cx="256" cy="256" r="40" stroke="url(#accent)" stroke-width="16"/>
+  <circle cx="304" cy="220" r="8" fill="url(#accent)"/>
+</svg>
