@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Screenix",
+  "version": "1.0.2",
+  "description": "Capture the current tab or a full page and export as PNG, JPG, WEBP, or PDF.",
+  "permissions": [
+    "activeTab",
+    "downloads",
+    "offscreen",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Screenix"
+  }
+}
