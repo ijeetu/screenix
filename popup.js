@@ -1,4 +1,4 @@
-const STORAGE_KEY = "sxtension-shot-pro-settings";
+const STORAGE_KEY = "screenix-settings";
 
 const state = {
   mode: "visible",

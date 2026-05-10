@@ -3,10 +3,15 @@ importScripts("blob-store.js");
 const SCROLL_DELAY_MS = 320;
 const RENDER_SETTLE_DELAY_MS = 180;
 const RESTORE_DELAY_MS = 120;
+const CAPTURE_THROTTLE_MS = 1700;
+const CAPTURE_RETRY_DELAY_MS = 2200;
+const MAX_CAPTURE_RETRIES = 5;
 const MAX_CANVAS_EDGE = 32767;
 const MAX_CANVAS_AREA = 268435456;
 let offscreenDocumentPromise = null;
 const pendingDownloadCleanup = new Map();
+let lastVisibleCaptureAt = 0;
+let activeCapturePromise = null;
 
 console.log("Screenix background worker v1.0.2 loaded");
 
@@ -15,11 +20,22 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return false;
   }
 
-  handleCapture(message.payload)
+  if (activeCapturePromise) {
+    sendResponse({
+      ok: false,
+      error: "A capture is already running. Wait for it to finish."
+    });
+    return true;
+  }
+
+  activeCapturePromise = handleCapture(message.payload)
     .then((result) => sendResponse({ ok: true, ...result }))
     .catch((error) => {
       emitProgress("error", error.message || "Capture failed.");
       sendResponse({ ok: false, error: error.message || "Capture failed." });
+    })
+    .finally(() => {
+      activeCapturePromise = null;
     });
 
   return true;
@@ -58,7 +74,7 @@ async function handleCapture(payload) {
   const mode = payload?.mode === "full" ? "full" : "visible";
   const format = normalizeFormat(payload?.format);
   const quality = normalizeQuality(payload?.quality);
-  const filenameBase = sanitizeBaseName(payload?.filename) || sanitizeBaseName(tab.title) || "sxtension-shot";
+  const filenameBase = sanitizeBaseName(payload?.filename) || sanitizeBaseName(tab.title) || "screenix-shot";
 
   emitProgress("working", mode === "full" ? "Preparing full page capture…" : "Capturing current screen…");
 
@@ -78,7 +94,7 @@ async function handleCapture(payload) {
 }
 
 async function captureVisibleTab(windowId) {
-  const dataUrl = await chrome.tabs.captureVisibleTab(windowId, { format: "png" });
+  const dataUrl = await captureVisibleTabDataUrl(windowId);
   return canvasFromDataUrl(dataUrl);
 }
 
@@ -114,7 +130,7 @@ async function captureFullPage(tab) {
         await sleep(SCROLL_DELAY_MS);
         await sleep(RENDER_SETTLE_DELAY_MS);
 
-        const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
+        const dataUrl = await captureVisibleTabDataUrl(tab.windowId);
         const bitmap = await imageBitmapFromDataUrl(dataUrl);
 
         if (!compositeCanvas) {
@@ -175,6 +191,31 @@ async function captureFullPage(tab) {
   return compositeCanvas;
 }
 
+async function captureVisibleTabDataUrl(windowId) {
+  let attempt = 0;
+
+  while (true) {
+    attempt += 1;
+    await throttleVisibleCapture();
+    lastVisibleCaptureAt = Date.now();
+
+    try {
+      const dataUrl = await chrome.tabs.captureVisibleTab(windowId, { format: "png" });
+      return dataUrl;
+    } catch (error) {
+      const message = String(error?.message || error);
+      const isQuotaError = message.includes("MAX_CAPTURE_VISIBLE_TAB_CALLS_PER_SECOND");
+
+      if (!isQuotaError || attempt >= MAX_CAPTURE_RETRIES) {
+        throw error;
+      }
+
+      emitProgress("working", "Waiting for Chrome capture quota…");
+      await sleep(CAPTURE_RETRY_DELAY_MS);
+    }
+  }
+}
+
 function buildScrollPositions(totalSize, viewportSize, overlap = 0) {
   if (!Number.isFinite(totalSize) || !Number.isFinite(viewportSize) || viewportSize <= 0) {
     return [0];
@@ -192,6 +233,15 @@ function buildScrollPositions(totalSize, viewportSize, overlap = 0) {
   }
 
   return [...new Set(positions)];
+}
+
+async function throttleVisibleCapture() {
+  const elapsed = Date.now() - lastVisibleCaptureAt;
+  const waitMs = CAPTURE_THROTTLE_MS - elapsed;
+
+  if (waitMs > 0) {
+    await sleep(waitMs);
+  }
 }
 
 async function exportCanvas(canvas, format, quality) {
