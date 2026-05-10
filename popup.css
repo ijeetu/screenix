@@ -519,6 +519,16 @@ input:hover {
   color: #b8ffec;
 }
 
+.credit {
+  margin: -2px 0 0;
+  padding: 0 2px;
+  color: rgba(149, 171, 192, 0.72);
+  font-size: 10px;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

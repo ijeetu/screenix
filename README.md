@@ -12,10 +12,11 @@ Features:
 
 ## Install
 
-1. Open `chrome://extensions`
-2. Enable `Developer mode`
-3. Click `Load unpacked`
-4. Select this folder: `/Volumes/DriveOS/Codes/sxtension`
+1. Clone or download this repository
+2. Open `chrome://extensions`
+3. Enable `Developer mode`
+4. Click `Load unpacked`
+5. Select the project folder
 
 ## Notes
 
