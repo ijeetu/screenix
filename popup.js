@@ -8,6 +8,7 @@ const state = {
 };
 
 const elements = {
+  shell: document.querySelector(".shell"),
   modeButtons: Array.from(document.querySelectorAll("[data-mode]")),
   formatButtons: Array.from(document.querySelectorAll("[data-format]")),
   captureButton: document.getElementById("captureButton"),
@@ -32,7 +33,9 @@ async function initialize() {
 
   syncInputs();
   bindEvents();
+  bindAutoSize();
   render();
+  adjustPopupSize();
 }
 
 function bindEvents() {
@@ -96,6 +99,7 @@ function render() {
   elements.quality.value = String(qualityPercent);
 
   const qualityDisabled = state.format === "png";
+  document.body.dataset.qualityVisible = String(!qualityDisabled);
   elements.qualityPanel.classList.toggle("is-disabled", qualityDisabled);
   elements.qualityRange.classList.toggle("is-hidden", qualityDisabled);
   elements.quality.disabled = qualityDisabled;
@@ -106,6 +110,8 @@ function render() {
     : state.format === "pdf"
       ? "Used for PDF image quality."
       : "Higher means better image quality.";
+
+  adjustPopupSize();
 }
 
 async function persist() {
@@ -147,4 +153,35 @@ function setStatus(message, tone) {
   elements.status.textContent = message;
   elements.status.classList.toggle("is-error", tone === "error");
   elements.status.classList.toggle("is-success", tone === "success");
+  adjustPopupSize();
+}
+
+function bindAutoSize() {
+  const observer = new ResizeObserver(() => adjustPopupSize());
+  observer.observe(elements.shell);
+
+  window.addEventListener("load", adjustPopupSize, { once: true });
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => adjustPopupSize()).catch(() => undefined);
+  }
+
+  for (const image of document.images) {
+    if (image.complete) {
+      continue;
+    }
+
+    image.addEventListener("load", adjustPopupSize, { once: true });
+    image.addEventListener("error", adjustPopupSize, { once: true });
+  }
+}
+
+function adjustPopupSize() {
+  requestAnimationFrame(() => {
+    const shellRect = elements.shell.getBoundingClientRect();
+    const height = Math.ceil(shellRect.height);
+    document.documentElement.style.height = `${height}px`;
+    document.body.style.height = `${height}px`;
+    document.body.style.overflow = "hidden";
+  });
 }

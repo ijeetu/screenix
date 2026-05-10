@@ -1,6 +1,7 @@
 importScripts("blob-store.js");
 
-const SCROLL_DELAY_MS = 180;
+const SCROLL_DELAY_MS = 320;
+const RENDER_SETTLE_DELAY_MS = 180;
 const RESTORE_DELAY_MS = 120;
 const MAX_CANVAS_EDGE = 32767;
 const MAX_CANVAS_AREA = 268435456;
@@ -86,8 +87,15 @@ async function captureFullPage(tab) {
   await injectPageHelper(tab.id);
   const metrics = await runPageCommand(tab.id, "prepare");
 
-  const xPositions = buildScrollPositions(metrics.totalWidth, metrics.viewportWidth);
-  const yPositions = buildScrollPositions(metrics.totalHeight, metrics.viewportHeight);
+  const horizontalOverlap = metrics.totalWidth > metrics.viewportWidth
+    ? Math.min(32, Math.floor(metrics.viewportWidth * 0.08))
+    : 0;
+  const verticalOverlap = metrics.totalHeight > metrics.viewportHeight
+    ? Math.min(120, Math.floor(metrics.viewportHeight * 0.18))
+    : 0;
+
+  const xPositions = buildScrollPositions(metrics.totalWidth, metrics.viewportWidth, horizontalOverlap);
+  const yPositions = buildScrollPositions(metrics.totalHeight, metrics.viewportHeight, verticalOverlap);
   const totalTiles = xPositions.length * yPositions.length;
 
   let compositeCanvas;
@@ -97,13 +105,14 @@ async function captureFullPage(tab) {
   let tileIndex = 0;
 
   try {
-    for (const y of yPositions) {
-      for (const x of xPositions) {
+    for (const [rowIndex, y] of yPositions.entries()) {
+      for (const [columnIndex, x] of xPositions.entries()) {
         tileIndex += 1;
-        emitProgress("working", `Capturing tile ${tileIndex} of ${totalTiles}…`);
+        emitProgress("working", `Tile ${tileIndex}/${totalTiles}…`);
 
-        await runPageCommand(tab.id, "scrollToPosition", { x, y });
+        const position = await runPageCommand(tab.id, "scrollToPosition", { x, y });
         await sleep(SCROLL_DELAY_MS);
+        await sleep(RENDER_SETTLE_DELAY_MS);
 
         const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
         const bitmap = await imageBitmapFromDataUrl(dataUrl);
@@ -121,10 +130,32 @@ async function captureFullPage(tab) {
           context.imageSmoothingEnabled = true;
         }
 
+        const cropLeftCss = columnIndex === 0 ? 0 : horizontalOverlap;
+        const cropTopCss = rowIndex === 0 ? 0 : verticalOverlap;
+        const sourceX = Math.round(cropLeftCss * scaleX);
+        const sourceY = Math.round(cropTopCss * scaleY);
+        const destX = Math.round((position.x + cropLeftCss) * scaleX);
+        const destY = Math.round((position.y + cropTopCss) * scaleY);
+        const sourceWidth = Math.min(bitmap.width - sourceX, compositeCanvas.width - destX);
+        const sourceHeight = Math.min(bitmap.height - sourceY, compositeCanvas.height - destY);
+
+        if (sourceWidth <= 0 || sourceHeight <= 0) {
+          if (typeof bitmap.close === "function") {
+            bitmap.close();
+          }
+          continue;
+        }
+
         context.drawImage(
           bitmap,
-          Math.round(x * scaleX),
-          Math.round(y * scaleY)
+          sourceX,
+          sourceY,
+          sourceWidth,
+          sourceHeight,
+          destX,
+          destY,
+          sourceWidth,
+          sourceHeight
         );
 
         if (typeof bitmap.close === "function") {
@@ -144,7 +175,7 @@ async function captureFullPage(tab) {
   return compositeCanvas;
 }
 
-function buildScrollPositions(totalSize, viewportSize) {
+function buildScrollPositions(totalSize, viewportSize, overlap = 0) {
   if (!Number.isFinite(totalSize) || !Number.isFinite(viewportSize) || viewportSize <= 0) {
     return [0];
   }
@@ -155,7 +186,8 @@ function buildScrollPositions(totalSize, viewportSize) {
 
   const positions = [];
   const maxOffset = totalSize - viewportSize;
-  for (let offset = 0; offset < totalSize; offset += viewportSize) {
+  const step = Math.max(1, viewportSize - Math.max(0, overlap));
+  for (let offset = 0; offset < totalSize; offset += step) {
     positions.push(Math.min(offset, maxOffset));
   }
 

@@ -8,19 +8,19 @@
 
 :root {
   color-scheme: light;
-  --bg: #07111f;
-  --bg-deep: #050a14;
-  --surface: rgba(9, 22, 38, 0.78);
-  --surface-strong: rgba(13, 29, 48, 0.95);
-  --surface-soft: rgba(255, 255, 255, 0.08);
-  --stroke: rgba(165, 213, 255, 0.18);
-  --stroke-strong: rgba(165, 213, 255, 0.28);
-  --text: #ecf7ff;
-  --muted: #95abc0;
-  --accent: #ff9e44;
-  --accent-strong: #ff7a18;
-  --accent-soft: rgba(255, 158, 68, 0.18);
-  --mint: #70f0d4;
+  --bg: #0a0a0a;
+  --bg-deep: #050505;
+  --surface: rgba(17, 17, 17, 0.84);
+  --surface-strong: rgba(24, 24, 24, 0.96);
+  --surface-soft: rgba(255, 255, 255, 0.06);
+  --stroke: rgba(255, 255, 255, 0.1);
+  --stroke-strong: rgba(255, 255, 255, 0.16);
+  --text: #f7f7f5;
+  --muted: #9ca3af;
+  --accent: #f4f2ed;
+  --accent-strong: #d8d4cb;
+  --accent-soft: rgba(201, 237, 216, 0.18);
+  --mint: #d7f3e3;
   --shadow: 0 22px 52px rgba(0, 0, 0, 0.35);
   --radius-xl: 24px;
   --radius-lg: 18px;
@@ -38,20 +38,37 @@ body {
   margin: 0;
   width: 360px;
   min-width: 360px;
+  height: auto;
+  min-height: 0;
+  max-height: none;
   font-family: "Avenir Next", "Trebuchet MS", "Segoe UI Variable", sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(112, 240, 212, 0.15), transparent 34%),
-    radial-gradient(circle at top right, rgba(255, 158, 68, 0.18), transparent 32%),
-    linear-gradient(180deg, #10233d 0%, var(--bg) 42%, var(--bg-deep) 100%);
   color: var(--text);
   overflow: hidden;
 }
 
+html {
+  background: #000;
+  scrollbar-width: none;
+}
+
 body {
   position: relative;
-  display: inline-block;
+  display: block;
   height: auto;
   vertical-align: top;
+  contain: layout paint;
+  background:
+    radial-gradient(circle at top left, rgba(215, 243, 227, 0.14), transparent 34%),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.06), transparent 28%),
+    linear-gradient(180deg, #121212 0%, var(--bg) 42%, var(--bg-deep) 100%);
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 .icon-sprite {
@@ -72,19 +89,19 @@ body::after {
 }
 
 body::before {
-  width: 200px;
-  height: 200px;
-  top: -56px;
-  right: -48px;
-  background: rgba(255, 136, 0, 0.22);
+  width: 140px;
+  height: 140px;
+  top: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.09);
 }
 
 body::after {
-  width: 220px;
-  height: 220px;
-  bottom: -80px;
-  left: -72px;
-  background: rgba(96, 219, 255, 0.16);
+  width: 150px;
+  height: 150px;
+  bottom: 0;
+  left: 0;
+  background: rgba(215, 243, 227, 0.14);
 }
 
 .shell {
@@ -93,6 +110,12 @@ body::after {
   display: grid;
   gap: 8px;
   width: 100%;
+  height: auto;
+}
+
+body[data-quality-visible] .shell {
+  padding: 10px;
+  gap: 6px;
 }
 
 .hero,
@@ -110,6 +133,10 @@ body::after {
   overflow: hidden;
 }
 
+body[data-quality-visible] .hero {
+  padding: 10px 12px 8px;
+}
+
 .hero h1 {
   margin: 0;
   width: 100%;
@@ -121,6 +148,10 @@ body::after {
   text-align: center;
 }
 
+body[data-quality-visible] .hero h1 {
+  font-size: 31px;
+}
+
 .panel {
   padding: 10px;
   border-radius: 16px;
@@ -128,6 +159,14 @@ body::after {
 
 .panel--dense {
   padding: 10px 12px;
+}
+
+body[data-quality-visible] .panel {
+  padding: 9px;
+}
+
+body[data-quality-visible] .panel--dense {
+  padding: 8px 10px;
 }
 
 .panel.is-disabled {
@@ -140,6 +179,10 @@ body::after {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 8px;
+}
+
+body[data-quality-visible] .panel__header {
+  margin-bottom: 6px;
 }
 
 .panel__header h2 {
@@ -191,7 +234,7 @@ input {
   row-gap: 3px;
   text-align: left;
   border-radius: 12px;
-  border: 1px solid rgba(165, 213, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
   color: var(--text);
   cursor: pointer;
@@ -202,6 +245,11 @@ input {
     box-shadow var(--ease);
 }
 
+body[data-quality-visible] .choice-card {
+  min-height: 56px;
+  padding: 8px 10px;
+}
+
 .choice-card:hover,
 .format-pill:hover,
 .capture-button:hover,
@@ -210,12 +258,12 @@ input:hover {
 }
 
 .choice-card.is-active {
-  border-color: rgba(255, 158, 68, 0.34);
+  border-color: rgba(215, 243, 227, 0.28);
   background:
-    linear-gradient(180deg, rgba(255, 158, 68, 0.1), rgba(255, 158, 68, 0.03)),
+    linear-gradient(180deg, rgba(215, 243, 227, 0.12), rgba(215, 243, 227, 0.035)),
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.04));
   box-shadow:
-    inset 0 0 0 1px rgba(255, 158, 68, 0.08),
+    inset 0 0 0 1px rgba(215, 243, 227, 0.08),
     0 10px 18px rgba(0, 0, 0, 0.12);
 }
 
@@ -247,13 +295,13 @@ input:hover {
   justify-content: center;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(165, 213, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   align-self: center;
 }
 
 .choice-card.is-active .choice-card__glyph {
-  background: rgba(255, 158, 68, 0.1);
-  border-color: rgba(255, 158, 68, 0.16);
+  background: rgba(215, 243, 227, 0.12);
+  border-color: rgba(215, 243, 227, 0.18);
 }
 
 .choice-card__icon {
@@ -275,7 +323,7 @@ input:hover {
   align-content: space-between;
   gap: 6px;
   border-radius: 14px;
-  border: 1px solid rgba(165, 213, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025)),
     rgba(255, 255, 255, 0.02);
@@ -292,13 +340,18 @@ input:hover {
     box-shadow var(--ease);
 }
 
+body[data-quality-visible] .format-pill {
+  min-height: 58px;
+  padding: 7px 5px;
+}
+
 .format-pill.is-active {
-  border-color: rgba(255, 158, 68, 0.4);
+  border-color: rgba(215, 243, 227, 0.32);
   background:
-    linear-gradient(180deg, rgba(255, 158, 68, 0.16), rgba(255, 158, 68, 0.06)),
+    linear-gradient(180deg, rgba(215, 243, 227, 0.13), rgba(215, 243, 227, 0.04)),
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
   box-shadow:
-    inset 0 0 0 1px rgba(255, 158, 68, 0.14),
+    inset 0 0 0 1px rgba(215, 243, 227, 0.1),
     0 14px 24px rgba(0, 0, 0, 0.16);
 }
 
@@ -309,7 +362,7 @@ input:hover {
   align-items: center;
   justify-content: center;
   border-radius: 9px;
-  border: 1px solid rgba(165, 213, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
   transition:
     background var(--ease),
@@ -317,9 +370,14 @@ input:hover {
     transform var(--ease);
 }
 
+body[data-quality-visible] .format-pill__glyph {
+  width: 24px;
+  height: 24px;
+}
+
 .format-pill.is-active .format-pill__glyph {
-  border-color: rgba(255, 158, 68, 0.22);
-  background: rgba(255, 158, 68, 0.14);
+  border-color: rgba(215, 243, 227, 0.2);
+  background: rgba(215, 243, 227, 0.13);
 }
 
 .format-pill__icon {
@@ -334,9 +392,18 @@ input:hover {
   opacity: 0.92;
 }
 
+body[data-quality-visible] .format-pill__icon {
+  width: 13px;
+  height: 13px;
+}
+
 .format-pill__label {
   font-size: 11px;
   line-height: 1;
+}
+
+body[data-quality-visible] .format-pill__label {
+  font-size: 10px;
 }
 
 .field input {
@@ -353,12 +420,16 @@ input:hover {
     background var(--ease);
 }
 
+body[data-quality-visible] .field input {
+  height: 36px;
+}
+
 .field input:focus,
 .choice-card:focus-visible,
 .format-pill:focus-visible,
 .capture-button:focus-visible,
 .range input:focus-visible {
-  box-shadow: 0 0 0 3px rgba(112, 240, 212, 0.2);
+  box-shadow: 0 0 0 3px rgba(215, 243, 227, 0.2);
 }
 
 .field input::placeholder {
@@ -374,6 +445,11 @@ input:hover {
   font-size: 11px;
 }
 
+body[data-quality-visible] .range {
+  gap: 6px;
+  font-size: 10px;
+}
+
 .range.is-hidden {
   display: none;
 }
@@ -385,9 +461,9 @@ input:hover {
   align-items: center;
   justify-content: center;
   padding: 0 8px;
-  border: 1px solid rgba(165, 213, 255, 0.14);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--muted);
   font-size: 10px;
   font-weight: 500;
@@ -395,23 +471,27 @@ input:hover {
   text-transform: uppercase;
 }
 
+body[data-quality-visible] .range__tag {
+  min-width: 40px;
+  height: 22px;
+  padding: 0 6px;
+}
+
 .range__track {
-  height: 34px;
+  height: auto;
   display: flex;
   align-items: center;
-  padding: 0 10px;
-  border: 1px solid rgba(165, 213, 255, 0.14);
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
-    rgba(255, 255, 255, 0.02);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .range input[type="range"] {
   width: 100%;
   height: 5px;
   appearance: none;
-  background: linear-gradient(90deg, rgba(112, 240, 212, 0.4), rgba(255, 158, 68, 0.95));
+  background: linear-gradient(90deg, rgba(215, 243, 227, 0.68), rgba(244, 242, 237, 0.92));
   border-radius: 999px;
   cursor: pointer;
 }
@@ -424,7 +504,7 @@ input:hover {
 .range input[type="range"]::-webkit-slider-runnable-track {
   height: 5px;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(112, 240, 212, 0.45), rgba(255, 158, 68, 0.95));
+  background: linear-gradient(90deg, rgba(215, 243, 227, 0.72), rgba(244, 242, 237, 0.92));
 }
 
 .range input[type="range"]::-webkit-slider-thumb {
@@ -435,9 +515,9 @@ input:hover {
   border: 0;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 30% 30%, #fff7ef 0%, #ffd6b1 32%, #ff9e44 70%, #ff7a18 100%);
+    radial-gradient(circle at 30% 30%, #ffffff 0%, #f4f2ed 34%, #dff5e8 72%, #d7f3e3 100%);
   box-shadow:
-    0 0 0 4px rgba(255, 158, 68, 0.14),
+    0 0 0 4px rgba(215, 243, 227, 0.16),
     0 8px 18px rgba(0, 0, 0, 0.28);
 }
 
@@ -445,7 +525,7 @@ input:hover {
   height: 5px;
   border: 0;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(112, 240, 212, 0.45), rgba(255, 158, 68, 0.95));
+  background: linear-gradient(90deg, rgba(215, 243, 227, 0.72), rgba(244, 242, 237, 0.92));
 }
 
 .range input[type="range"]::-moz-range-thumb {
@@ -454,9 +534,9 @@ input:hover {
   border: 0;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 30% 30%, #fff7ef 0%, #ffd6b1 32%, #ff9e44 70%, #ff7a18 100%);
+    radial-gradient(circle at 30% 30%, #ffffff 0%, #f4f2ed 34%, #dff5e8 72%, #d7f3e3 100%);
   box-shadow:
-    0 0 0 4px rgba(255, 158, 68, 0.14),
+    0 0 0 4px rgba(215, 243, 227, 0.16),
     0 8px 18px rgba(0, 0, 0, 0.28);
 }
 
@@ -465,6 +545,12 @@ input:hover {
   color: var(--muted);
   font-size: 11px;
   line-height: 1.35;
+}
+
+body[data-quality-visible] .hint {
+  margin-top: 6px;
+  font-size: 10px;
+  line-height: 1.2;
 }
 
 .hint.is-muted {
@@ -479,17 +565,21 @@ input:hover {
   align-items: center;
   justify-content: center;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
-  color: #1e1103;
+  background: linear-gradient(135deg, #f7f7f5 0%, #ddd8ce 100%);
+  color: #0a0a0a;
   cursor: pointer;
   overflow: hidden;
   box-shadow:
-    0 18px 30px rgba(255, 122, 24, 0.28),
+    0 18px 30px rgba(244, 242, 237, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition:
     transform var(--ease),
     filter var(--ease),
     opacity var(--ease);
+}
+
+body[data-quality-visible] .capture-button {
+  min-height: 42px;
 }
 
 .capture-button[disabled] {
@@ -518,13 +608,24 @@ input:hover {
   letter-spacing: 0.02em;
 }
 
+body[data-quality-visible] .capture-button__label {
+  font-size: 13px;
+}
+
 .status {
   margin: 0;
-  min-height: 18px;
+  min-height: 14px;
   padding: 0 2px;
   color: var(--muted);
   font-size: 11px;
-  line-height: 1.3;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body[data-quality-visible] .status {
+  font-size: 10px;
 }
 
 .status.is-error {
@@ -536,8 +637,8 @@ input:hover {
 }
 
 .credit {
-  margin: -4px 0 0;
-  padding: 0 2px 1px;
+  margin: 0;
+  padding: 1px 2px 2px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -547,6 +648,11 @@ input:hover {
   line-height: 1;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+body[data-quality-visible] .credit {
+  font-size: 8px;
+  gap: 4px;
 }
 
 .credit__heart {

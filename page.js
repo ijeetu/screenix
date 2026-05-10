@@ -90,6 +90,30 @@
     };
   }
 
+  function nextFrame() {
+    return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+  }
+
+  async function waitForScrollToSettle(targetX, targetY) {
+    let stableFrames = 0;
+
+    for (let attempt = 0; attempt < 18; attempt += 1) {
+      await nextFrame();
+
+      const deltaX = Math.abs(window.scrollX - targetX);
+      const deltaY = Math.abs(window.scrollY - targetY);
+
+      if (deltaX <= 1 && deltaY <= 1) {
+        stableFrames += 1;
+        if (stableFrames >= 3) {
+          break;
+        }
+      } else {
+        stableFrames = 0;
+      }
+    }
+  }
+
   window.__SXTENSION_PAGE_CAPTURE__ = {
     prepare() {
       const root = getScrollRoot();
@@ -128,12 +152,14 @@
       };
     },
 
-    scrollToPosition(position) {
+    async scrollToPosition(position) {
       window.scrollTo({
         left: position.x,
         top: position.y,
         behavior: "auto"
       });
+
+      await waitForScrollToSettle(position.x, position.y);
 
       return {
         x: window.scrollX,
