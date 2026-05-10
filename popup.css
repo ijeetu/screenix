@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("assets/fonts/InstrumentSerif-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --bg: #07111f;
@@ -97,24 +105,20 @@ body::after {
 }
 
 .hero {
-  padding: 12px 14px;
+  padding: 12px 14px 10px;
   border-radius: 18px;
   overflow: hidden;
 }
 
 .hero h1 {
-  margin: 0 0 2px;
-  font-size: 22px;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-weight: 500;
-}
-
-.hero p {
   margin: 0;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.35;
+  width: 100%;
+  font-family: "Instrument Serif", "Iowan Old Style", "Times New Roman", serif;
+  font-size: 34px;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+  text-align: center;
 }
 
 .panel {
